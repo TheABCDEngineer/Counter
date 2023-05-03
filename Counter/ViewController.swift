@@ -2,8 +2,8 @@ import UIKit
 
 class ViewController: UIViewController {
   
-    @IBOutlet weak var informationField: UITextView!
-    @IBOutlet weak var counterLabel: UILabel!
+    @IBOutlet weak private var informationField: UITextView!
+    @IBOutlet weak private var counterLabel: UILabel!
     
     private var counter = 0
     private let counterStep = 1
@@ -13,28 +13,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         dateFormatter.dateFormat = "dd.MM HH:mm:ss"
         informationField.text = "История изменений:\n"
+        scrollInformationField()
     }
     
-    @IBAction func resetCounter() {
-        counter = 0
-        updateCounterLabel(counter)
-        addMessageToInformationField("", true)
-    }
-    
-    @IBAction func decreaseCounter() {
-        counter -= counterStep
-        updateCounterLabel(counter)
-        addMessageToInformationField("-")
-        
-        if counter < 0 {
-            counter = 0
-        }
-    }
-    
-    @IBAction func increaseCounter() {
-        counter += counterStep
-        updateCounterLabel(counter)
-        addMessageToInformationField("+")
+    private func scrollInformationField() {
+        informationField.setContentOffset(
+            CGPoint(x: 0, y: informationField.contentSize.height - informationField.bounds.height),
+            animated: false
+        )
     }
     
     private func updateCounterLabel(_ value: Int) {
@@ -60,5 +46,29 @@ class ViewController: UIViewController {
         }
         
         informationField.text?.append("[" + dateFormatter.string(from: Date()) + "]:" + submessage + "\n")
+        
+        scrollInformationField()
+    }
+    
+    @IBAction private func resetCounter() {
+        counter = 0
+        updateCounterLabel(counter)
+        addMessageToInformationField("", true)
+    }
+    
+    @IBAction private func decreaseCounter() {
+        counter -= counterStep
+        updateCounterLabel(counter)
+        addMessageToInformationField("-")
+        
+        if counter < 0 {
+            counter = 0
+        }
+    }
+    
+    @IBAction private func increaseCounter() {
+        counter += counterStep
+        updateCounterLabel(counter)
+        addMessageToInformationField("+")
     }
 }
